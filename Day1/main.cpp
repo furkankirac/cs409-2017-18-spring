@@ -1,29 +1,29 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string>
 
 struct Data
 {
-    int age;
-    char* name;
+private:
+    int         m_age;
+    std::string m_name;
 
+public:
     Data()
     {
-        age = 40;
-
-        name = (char*)malloc(10);
-        name[0] = 'f';
-        name[1] = 'u';
-        name[2] = 'r';
-        name[3] = 'k';
-        name[4] = 'a';
-        name[5] = 'n';
-        name[6] = '\0';
+        m_age = 40;
+        m_name = "furkan";
     }
 
     ~Data()
     {
-        free(name);
     }
+
+    std::string name()
+    {
+        return m_name;
+    }
+
 };
 
 int main(int argc, char* argv[])
@@ -33,7 +33,7 @@ int main(int argc, char* argv[])
     Data* pData = new Data();
     printf("I did it\n");
 
-    printf("The string I created is %s.\n", pData->name);
+    printf("The string I created is %s.\n", pData->name().c_str());
 
     delete pData;
     return 0;
