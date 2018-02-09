@@ -1,11 +1,18 @@
 #include <stdio.h>
+#include <stdlib.h>
+
+struct Data
+{
+    int age;
+    char* name;
+};
 
 int main(int argc, char* argv[])
 {
-    printf("Hello World! I have %d arguments.\n", argc);
+    printf("I'm gonna allocate %ld bytes.\n", sizeof(Data));
+    Data* pData = (Data*)malloc(sizeof(Data));
+    printf("I did it\n");
 
-    for(int i=0; i<argc; ++i)
-        printf(">>> %s\n", argv[i]);
-
+    free(pData);
     return 0;
 }
