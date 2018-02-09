@@ -2,24 +2,23 @@
 #include <stdlib.h>
 #include <string>
 
-struct Data
+class Data
 {
-private:
     int         m_age;
     std::string m_name;
 
 public:
-    Data()
+    Data(int age, const std::string& name)
     {
-        m_age = 40;
-        m_name = "furkan";
+        m_age = age;
+        m_name = name;
     }
 
     ~Data()
     {
     }
 
-    std::string name()
+    const std::string& name()
     {
         return m_name;
     }
@@ -30,7 +29,7 @@ int main(int argc, char* argv[])
 {
     printf("I'm gonna allocate %ld bytes.\n", sizeof(Data));
 
-    Data* pData = new Data();
+    Data* pData = new Data(40, "furkan");
     printf("I did it\n");
 
     printf("The string I created is %s.\n", pData->name().c_str());
