@@ -4,4 +4,4 @@ project(Day2)
 
 SET(CMAKE_CXX_FLAGS "-std=c++17")
 
-add_executable(${PROJECT_NAME} "main.cpp")
+add_executable(${PROJECT_NAME} "main.cpp" "Fraction.h")

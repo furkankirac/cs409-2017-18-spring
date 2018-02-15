@@ -1,39 +1,25 @@
-#include <string>
+#include "Fraction.h"
 
-class Fraction
+Fraction add(const Fraction& F1, const Fraction& F2)
 {
-    std::string m_name;
-    int m_top;
-    int m_bottom;
+    Fraction Fnew;
+    int top = F1.top()*F2.bottom()+F2.top()*F1.bottom();
+    int bottom = F1.bottom()*F2.bottom();
+    Fnew.set(top, bottom);
+    return Fnew;
+}
 
-public:
-    Fraction(int top=0, int bottom=1) : m_top(top), m_bottom(bottom)
-    {
-    }
-
-    Fraction(std::string name, int top=0, int bottom=1) :
-        Fraction(top, bottom)
-    {
-        m_name = name;
-    }
-
-    ~Fraction()
-    {
-    }
-};
 
 int main()
 {
-    {
-    Fraction* F = new Fraction;
-    delete F;
-    }
+    Fraction F1("ali", 1, 2);
+    Fraction F2("veli", 2, 3);
 
-    {
-    Fraction F2;
-    }
+    F1.print();
+    F2.print();
 
-    Fraction* F3;
+    Fraction F_added = add(F1, F2);
+    F_added.print();
 
     return 0;
 }
