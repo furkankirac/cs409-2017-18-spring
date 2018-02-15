@@ -21,9 +21,26 @@ public:
         m_name = name;
     }
 
+    Fraction(const Fraction& other) :
+        Fraction(other.m_name, other.m_top, other.m_bottom)
+    {
+    }
+
     ~Fraction()
     {
     }
+
+    Fraction& operator =(const Fraction& other)
+    {
+        set(other.top(), other.bottom());
+        return *this;
+    }
+
+//    Fraction& operator =(int k)
+//    {
+//        set(k, 1);
+//        return *this;
+//    }
 
     int top() const
     { return m_top; }
