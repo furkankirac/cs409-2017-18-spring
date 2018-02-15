@@ -37,6 +37,14 @@ public:
         m_bottom = bottom;
     }
 
+    Fraction add(const Fraction& other) const
+    {
+        return Fraction(
+                    top()*other.bottom()+other.top()*bottom(),
+                    bottom()*other.bottom()
+                    );
+    }
+
     void print()
     {
         if(m_name.empty())

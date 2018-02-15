@@ -1,15 +1,5 @@
 #include "Fraction.h"
 
-Fraction add(const Fraction& F1, const Fraction& F2)
-{
-    Fraction Fnew;
-    int top = F1.top()*F2.bottom()+F2.top()*F1.bottom();
-    int bottom = F1.bottom()*F2.bottom();
-    Fnew.set(top, bottom);
-    return Fnew;
-}
-
-
 int main()
 {
     Fraction F1("ali", 1, 2);
@@ -18,7 +8,7 @@ int main()
     F1.print();
     F2.print();
 
-    Fraction F_added = add(F1, F2);
+    Fraction F_added = F1.add(F2);
     F_added.print();
 
     return 0;
