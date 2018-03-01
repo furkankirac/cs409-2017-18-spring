@@ -26,23 +26,6 @@ namespace X
 }
 
 
-struct Functor
-{
-    int operator() (int value1, int value2) const
-    {
-        return value1 + value2;
-    }
-};
-
-struct Functor2
-{
-    int operator() (int value1, int value2) const
-    {
-        return value1 - value2;
-    }
-};
-
-
 template <typename T>
 float doIt(int a, int b, const T& func)
 {
@@ -67,9 +50,23 @@ int main()
     }
 
     {
-        Functor2 f;
-        auto summation = doIt(5, 6, f);
+        int a=5;
+        int b=6;
+
+        auto f = [=]() mutable {
+            ++a;
+            ++b;
+            return a*b;
+        };
+        auto summation = f();
         std::cout << summation << std::endl;
+        std::cout << "a = " << a << std::endl;
+        std::cout << "b = " << b << std::endl;
+
+        summation = f();
+        std::cout << summation << std::endl;
+        std::cout << "a = " << a << std::endl;
+        std::cout << "b = " << b << std::endl;
     }
 
     return 0;
