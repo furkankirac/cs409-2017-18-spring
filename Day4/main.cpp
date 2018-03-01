@@ -28,21 +28,23 @@ namespace X
 
 struct Functor
 {
-//    int m_value1;
-//    int m_value2;
-
-//    Functor(int value1, int value2) : m_value1(value1), m_value2(value2)
-//    {
-//    }
-
     int operator() (int value1, int value2) const
     {
         return value1 + value2;
     }
 };
 
+struct Functor2
+{
+    int operator() (int value1, int value2) const
+    {
+        return value1 - value2;
+    }
+};
 
-float doIt(int a, int b, const Functor& func)
+
+template <typename T>
+float doIt(int a, int b, const T& func)
 {
     return func(a, b);
 }
@@ -65,7 +67,7 @@ int main()
     }
 
     {
-        Functor f;
+        Functor2 f;
         auto summation = doIt(5, 6, f);
         std::cout << summation << std::endl;
     }
