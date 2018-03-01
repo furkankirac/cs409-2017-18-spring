@@ -7,11 +7,6 @@ namespace X
     struct Number
     {
         T m_value;
-
-        operator T()
-        {
-            return m_value;
-        }
     };
 
     template <typename T>
@@ -31,6 +26,28 @@ namespace X
 }
 
 
+struct Functor
+{
+//    int m_value1;
+//    int m_value2;
+
+//    Functor(int value1, int value2) : m_value1(value1), m_value2(value2)
+//    {
+//    }
+
+    int operator() (int value1, int value2) const
+    {
+        return value1 + value2;
+    }
+};
+
+
+float doIt(int a, int b, const Functor& func)
+{
+    return func(a, b);
+}
+
+
 int main()
 {
 //    int a = 5;
@@ -41,8 +58,17 @@ int main()
 //    typedef X::Number<float> FloatNumber;
     using FloatNumber = X::Number<float>;
 
-//    auto summation = X::add(5, 6);
-    auto summation = add(FloatNumber{5.2}, FloatNumber{6.3});
-    std::cout << summation << std::endl;
+    {
+//        auto summation = X::add(5, 6);
+        auto summation = add(FloatNumber{5.2}, FloatNumber{6.3});
+        std::cout << summation << std::endl;
+    }
+
+    {
+        Functor f;
+        auto summation = doIt(5, 6, f);
+        std::cout << summation << std::endl;
+    }
+
     return 0;
 }
