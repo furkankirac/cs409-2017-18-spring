@@ -3,12 +3,13 @@
 // ADL: Argument-dependent lookup
 namespace X
 {
-    struct Integer
+    template <typename T>
+    struct Number
     {
-        int m_value;
+        T m_value;
     };
 
-    int add(const Integer& a, const Integer& b)
+    int add(const Number<int>& a, const Number<int>& b)
     {
         return a.m_value + b.m_value;
     }
@@ -24,6 +25,7 @@ namespace X
 int main()
 {
 //    int summation = X::add(5, 6);
-    int summation = add(X::Integer{5}, X::Integer{6});
+    int summation = add(X::Number<int>{5}, X::Number<int>{6});
+    std::cout << summation << std::endl;
     return 0;
 }
