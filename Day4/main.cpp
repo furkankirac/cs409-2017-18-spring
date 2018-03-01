@@ -22,16 +22,10 @@ namespace X
     {
         return a - b;
     }
-
 }
-
 
 template <typename T>
-float doIt(int a, int b, const T& func)
-{
-    return func(a, b);
-}
-
+using Num = X::Number<T>;
 
 int main()
 {
@@ -41,7 +35,8 @@ int main()
 //    auto a = int{5};
 
 //    typedef X::Number<float> FloatNumber;
-    using FloatNumber = X::Number<float>;
+
+    using FloatNumber = Num<float>;
 
     {
 //        auto summation = X::add(5, 6);
