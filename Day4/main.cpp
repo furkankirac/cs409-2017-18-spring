@@ -7,16 +7,25 @@ namespace X
     struct Number
     {
         T m_value;
+
+        operator T()
+        {
+            return m_value;
+        }
     };
 
-    int add(const Number<int>& a, const Number<int>& b)
+    template <typename T>
+    auto add(const T& a, const T& b)
     {
-        return a.m_value + b.m_value;
+        if constexpr(std::is_class<T>::value)
+            return a.m_value + b.m_value;
+        else
+            return a + b;
     }
 
-    int add(int a, int b)
+    auto subtract(int a, int b) -> int
     {
-        return a+b;
+        return a - b;
     }
 
 }
@@ -24,8 +33,16 @@ namespace X
 
 int main()
 {
-//    int summation = X::add(5, 6);
-    int summation = add(X::Number<int>{5}, X::Number<int>{6});
+//    int a = 5;
+//    int a(5);
+//    int a{5};
+//    auto a = int{5};
+
+//    typedef X::Number<float> FloatNumber;
+    using FloatNumber = X::Number<float>;
+
+//    auto summation = X::add(5, 6);
+    auto summation = add(FloatNumber{5.2}, FloatNumber{6.3});
     std::cout << summation << std::endl;
     return 0;
 }
