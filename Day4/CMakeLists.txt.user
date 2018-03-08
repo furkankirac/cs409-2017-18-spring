@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE QtCreatorProject>
-<!-- Written by QtCreator 4.5.83, 2018-03-01T14:55:10. -->
+<!-- Written by QtCreator 4.5.83, 2018-03-08T13:23:46. -->
 <qtcreator>
  <data>
   <variable>EnvironmentId</variable>
@@ -48,13 +48,16 @@
  </data>
  <data>
   <variable>ProjectExplorer.Project.PluginSettings</variable>
-  <valuemap type="QVariantMap"/>
+  <valuemap type="QVariantMap">
+   <valuelist type="QVariantList" key="ClangCodeModel.CustomCommandLineKey"/>
+   <value type="bool" key="ClangCodeModel.UseGlobalConfig">true</value>
+  </valuemap>
  </data>
  <data>
   <variable>ProjectExplorer.Project.Target.0</variable>
   <valuemap type="QVariantMap">
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Macos-Clang-v5.0.1 (Qt v5.10.0)</value>
-   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Macos-Clang-v5.0.1 (Qt v5.10.0)</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName">Macos-Clang-v5.0.1 (Qt v5.10.1)</value>
+   <value type="QString" key="ProjectExplorer.ProjectConfiguration.DisplayName">Macos-Clang-v5.0.1 (Qt v5.10.1)</value>
    <value type="QString" key="ProjectExplorer.ProjectConfiguration.Id">{d61b5029-3a08-4eea-b57c-79a03391e852}</value>
    <value type="int" key="ProjectExplorer.Target.ActiveBuildConfiguration">1</value>
    <value type="int" key="ProjectExplorer.Target.ActiveDeployConfiguration">0</value>
@@ -180,7 +183,7 @@
     <value type="QString" key="CMakeProjectManager.CMakeRunConfiguation.Title">Day4</value>
     <value type="QString" key="CMakeProjectManager.CMakeRunConfiguration.Arguments"></value>
     <value type="QString" key="CMakeProjectManager.CMakeRunConfiguration.UserWorkingDirectory"></value>
-    <value type="QString" key="CMakeProjectManager.CMakeRunConfiguration.UserWorkingDirectory.default">/Users/furkankirac/COURSE/2017_02 - CS409/cs409-2017-18-spring/build-Day4-desktop-Release</value>
+    <value type="QString" key="CMakeProjectManager.CMakeRunConfiguration.UserWorkingDirectory.default">/var/folders/rt/60yj4p5d2_qb3q8lznl90q3h0000gn/T/QtCreator-ZcGxnM/qtc-cmake-MJHefPdW</value>
     <value type="int" key="PE.EnvironmentAspect.Base">2</value>
     <valuelist type="QVariantList" key="PE.EnvironmentAspect.Changes"/>
     <value type="QString" key="ProjectExplorer.ProjectConfiguration.DefaultDisplayName"></value>

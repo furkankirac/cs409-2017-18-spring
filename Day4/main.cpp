@@ -40,7 +40,7 @@ int main()
 
     {
 //        auto summation = X::add(5, 6);
-        auto summation = add(FloatNumber{5.2}, FloatNumber{6.3});
+        auto summation = add(FloatNumber{5.2f}, FloatNumber{6.3f});
         std::cout << summation << std::endl;
     }
 
