@@ -8,15 +8,14 @@ class Data
     std::string m_name;
 
 public:
+    ///// non-default constructor
     Data(int age, const std::string& name) :
         m_age(age),
-        m_name(name)
+        m_name(std::move(name))
     {
     }
 
-    ~Data()
-    {
-    }
+    ~Data() = default;
 
     const std::string& name()
     {
@@ -29,15 +28,20 @@ class DataEx : public Data
     short m_height;
 
 public:
+    ///// non-default constructor
     DataEx(int age, const std::string& name, short height) :
         Data(age, name),
         m_height(height)
     {
     }
 
-    ~DataEx()
-    {}
+    DataEx(const DataEx&) = default;
+    DataEx(const DataEx&&) = default;
 
+    DataEx& operator =(const DataEx&) = default;
+    DataEx& operator =(DataEx&&) = default;
+
+    ~DataEx() = default;
 };
 
 
