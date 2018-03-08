@@ -26,9 +26,8 @@ public:
     {
     }
 
-    ~Fraction()
-    {
-    }
+    ///// non-default destructor
+    ~Fraction() = default;
 
     Fraction& operator =(const Fraction& other)
     {

@@ -6,7 +6,6 @@ int main()
     Fraction F2("veli", 2, 3);
     Fraction F3(F2);
 
-    F2 = 5;
     F1.print();
     F2.print();
     F3.print();
