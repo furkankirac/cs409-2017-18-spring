@@ -26,13 +26,11 @@ private:
     Gender          m_gender = Gender::Female;
 
 public:
-    Animal()
-    {
-    }
+    Animal() = default;
 
     Animal(Animal::Type type, const std::string& name = "") :
         m_type(type),
-        m_name(name)
+        m_name(std::move(name))
     {
     }
 
@@ -53,28 +51,11 @@ public:
     }
 
 
-    Animal& operator =(const Animal& other)
-    {
-        m_type = other.m_type;
-        m_name = other.m_name;
-        m_age = other.m_age;
-        m_gender = other.m_gender;
+    Animal& operator =(const Animal& other) = default;
 
-        return *this;
-    }
+    Animal& operator =(Animal&& other) = default;
 
-    Animal& operator =(Animal&& other)
-    {
-        m_type = other.m_type;
-        m_name = other.m_name;
-        m_age = other.m_age;
-        m_gender = other.m_gender;
-
-        return *this;
-    }
-
-
-    ~Animal()
+    virtual ~Animal()
     {
     }
 
@@ -94,6 +75,11 @@ public:
         return m_name;
     }
 
+    int dummy() const
+    {
+        return 42;
+    }
+
     virtual void printType()
     {
         std::cout << "Animal" << std::endl;
@@ -110,6 +96,8 @@ public:
     {
     }
 
+    int dummy() const = delete;
+
     virtual void printType() override
     {
         std::cout << "XAnimal" << std::endl;
@@ -125,6 +113,8 @@ int main()
     Animal sparky((Animal&&)puppy);
 
     XAnimal xpuppy;
+//    xpuppy.dummy();
+
     puppy.printType();
     xpuppy.printType();
 
