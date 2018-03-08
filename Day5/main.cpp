@@ -25,7 +25,7 @@ public:
 
 struct Dummy
 {
-    static int count = 0; // count belongs to Dummy class, not to its instances.
+    static int count; // count belongs to Dummy class, not to its instances.
 
     int value;
     static int dummy(const Dummy& d)
@@ -33,6 +33,8 @@ struct Dummy
         return d.value;
     }
 };
+
+int Dummy::count = 0;
 
 void stealFromFurkan(Dummy& d, Furkan& f)
 {
