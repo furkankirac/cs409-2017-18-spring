@@ -42,11 +42,17 @@ void printVector(const std::vector<T>& vec)
     }
 }
 
-void convert(std::vector<std::string>& to, const std::vector<int>& from)
+template<typename TYPE_TO, typename TYPE_FROM>
+void convert(std::vector<TYPE_TO>& to, const std::vector<TYPE_FROM>& from)
 {
     to.clear();
     for(const auto a : from)
-        to.push_back(std::to_string(a));
+    {
+        if constexpr(std::is_same<TYPE_TO, std::string>::value)
+            to.push_back(std::to_string(a));
+        else
+            to.push_back(a);
+    }
 }
 
 
@@ -57,12 +63,15 @@ int main(int argc, char* argv[])
     std::vector<int> A{1, 2, 3, 4};
     std::vector<std::string> B;
     std::vector<float> C{1.1f, 2.2f, 3.3f, 4.4f};
+    std::vector<std::string> D;
 
     convert(B, A);
+    convert(D, C);
 //    convert(B, std::vector<int>{1, 2, 3, 4}); // rvalue, this works because of const usage in convert
     printVector(A);
     printVector(B);
     printVector(C);
+    printVector(D);
 
 //    B = A;
 
