@@ -19,9 +19,8 @@
 
 void printVector(const std::vector<int>& vec)
 {
-    int sz = vec.size();
-    for(int i=0; i<sz; ++i)
-        std::cout << vec[i] << std::endl;
+    for(auto value : vec)
+        std::cout << value << std::endl;
 }
 
 int main(int argc, char* argv[])
@@ -30,9 +29,7 @@ int main(int argc, char* argv[])
 
     int array[10];
 
-    vector<int> v;
-    v.push_back(10);
-    v.push_back(20);
+    vector<int> v{10, 20};
     printVector(v);
 
 }
