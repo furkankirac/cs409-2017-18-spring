@@ -22,6 +22,8 @@ namespace X
     template<typename T>
     struct vec : public std::vector<T>
     {
+        using value_type = T;
+
         using base = std::vector<T>;
         using base::base;
         using base::operator =;
@@ -43,12 +45,15 @@ void printVector(const std::vector<T>& vec)
 }
 
 template<typename TYPE_TO, typename TYPE_FROM>
-void convert(std::vector<TYPE_TO>& to, const std::vector<TYPE_FROM>& from)
+void convert(TYPE_TO& to, const TYPE_FROM& from)
 {
+    using underlying_type_to = typename TYPE_TO::value_type;
+//    using underlying_type_from = typename TYPE_FROM::value_type;
+
     to.clear();
     for(const auto a : from)
     {
-        if constexpr(std::is_same<TYPE_TO, std::string>::value)
+        if constexpr(std::is_same<underlying_type_to, std::string>::value)
             to.push_back(std::to_string(a));
         else
             to.push_back(a);
