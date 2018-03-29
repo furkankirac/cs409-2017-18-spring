@@ -21,22 +21,30 @@
 // std::any
 // [[fallthrough]], [[maybe_unused]], [[nodiscard]]
 
-struct Vec
+struct Dummy
 {
-    std::vector<int> v;
+    union
+    {
+        int a;
+        float f;
+        long double d;
+    };
 
-    Vec(int value) : v{value} { }
-    Vec(std::initializer_list<int> l) : v{l} { }
+    enum Type { Int, Float, LongDouble };
+    Type type;
 };
 
 int main()
 {
     using namespace std;
 
-    Vec a{3, 4, 5, 6};
+    Dummy dummy;
+    dummy.a = 5;
+    dummy.type = Dummy::Type::Int;
 
-    for(auto& value : a.v)
-        cout << value << endl;
+    dummy.f = 3.2f;
+
+    cout << dummy.a << endl;
 
     return 0;
 }
