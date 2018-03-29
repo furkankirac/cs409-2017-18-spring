@@ -5,8 +5,6 @@
 
 // clang code-model
 
-// init-statement for if/switch
-
 // initializer lists
 // std::array, std::pair, std::tuple
 // returning by copy list initialization
@@ -23,21 +21,22 @@
 // std::any
 // [[fallthrough]], [[maybe_unused]], [[nodiscard]]
 
+struct Vec
+{
+    std::vector<int> v;
+
+    Vec(int value) : v{value} { }
+    Vec(std::initializer_list<int> l) : v{l} { }
+};
+
 int main()
 {
     using namespace std;
 
-    auto longJob = [] {
-        // ... execute some long jobs
-        return 15;
-    };
+    Vec a{3, 4, 5, 6};
 
-    if(auto value = longJob(); value > 10)
-    {
-        // do some other things
-        float k = value * 10;
-        // do other things with k
-    }
+    for(auto& value : a.v)
+        cout << value << endl;
 
     return 0;
 }
