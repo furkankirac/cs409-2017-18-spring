@@ -2,8 +2,8 @@
 #include <vector>
 #include <array>
 #include <variant>
+#include <type_traits>
 
-// structured bindings
 // generic lambdas
 // std::any
 // std::optional
@@ -17,29 +17,44 @@
 
 struct Dummy
 {
-    std::string s = "furkan";
-    int k = -2;
-    float f = 3.14f;
+    const int a;
+    const float& f;
 
-    Dummy() : k(5) { }
+    Dummy(const int a, const float& f) : a(a), f(f) { }
+
+    template<typename T, typename U>
+    auto operator() (const T& s, U u) {
+        using K = typename std::decay_t<T>;
+        if constexpr(std::is_same_v<K, int>)
+        {
+            return 2*s;
+        } else
+        {
+            return s + std::to_string(a) + std::to_string(f);
+        }
+    }
 };
 
 int main()
 {
     using namespace std;
 
-//    Dummy d;
-//    auto [s, k, f] = d;
-//    cout << s << endl;
-//    cout << k << endl;
-//    cout << f << endl;
+    int a = 123;
+    float f = 5.55f;
 
-    vector<pair<int, double>> v{ {5, 10.01}, {-2, 3.14} };
+    auto lambda = [a, &f](const auto& s, auto v) {
+        using T = typename std::decay_t<decltype(s)>;
+        if constexpr(std::is_same_v<T, int>)
+        {
+            return 2*s;
+        } else
+        {
+            return s + std::to_string(a) + std::to_string(f);
+        }
+    };
 
-    for(auto [a, b] : v)
-        cout << a << ", " << b << endl;
-
-
+    cout << lambda("furkan", 10) << endl;
+    cout << lambda(5, "deneme"s) << endl;
 
     return 0;
 }
