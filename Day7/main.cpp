@@ -3,14 +3,10 @@
 #include <array>
 #include <variant>
 
-// clang code-model
-
-// initializer lists
 // std::array, std::pair, std::tuple
 // returning by copy list initialization
 // structured bindings
 // generic lambdas
-// union, std::variant
 // std::any
 // std::optional
 // static_cast, dynamic_cast, reinterpret_cast, const_cast
@@ -21,30 +17,25 @@
 // std::any
 // [[fallthrough]], [[maybe_unused]], [[nodiscard]]
 
-struct Dummy
-{
-    union
-    {
-        int a;
-        float f;
-        long double d;
-    };
-
-    enum Type { Int, Float, LongDouble };
-    Type type;
-};
 
 int main()
 {
     using namespace std;
 
-    Dummy dummy;
-    dummy.a = 5;
-    dummy.type = Dummy::Type::Int;
+    std::variant<int, float, long double, std::string> dummy;
+    dummy = 5;
+    dummy = 5.3f;
+    dummy = 10.0l;
+    dummy = "furkan";
 
-    dummy.f = 3.2f;
-
-    cout << dummy.a << endl;
+    try
+    {
+        auto value = std::get<int>(dummy);
+    }
+    catch(const std::bad_variant_access& e)
+    {
+        cout << "Error" << endl;
+    }
 
     return 0;
 }
