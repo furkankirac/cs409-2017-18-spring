@@ -32,17 +32,12 @@ int main()
         return 15;
     };
 
+    if(auto value = longJob(); value > 10)
     {
-        auto value = longJob();
-        if(value > 10)
-        {
-            // do some other things
-            float k = value * 10;
-            // do other things with k
-        }
+        // do some other things
+        float k = value * 10;
+        // do other things with k
     }
-
-
 
     return 0;
 }
