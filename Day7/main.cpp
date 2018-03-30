@@ -4,17 +4,6 @@
 #include <variant>
 #include <type_traits>
 
-// generic lambdas
-// std::any
-// std::optional
-// static_cast, dynamic_cast, reinterpret_cast, const_cast
-
-// template specialization
-// inline variables
-// returning {}
-// std::any
-// [[fallthrough]], [[maybe_unused]], [[nodiscard]]
-
 struct Dummy
 {
     const int a;
