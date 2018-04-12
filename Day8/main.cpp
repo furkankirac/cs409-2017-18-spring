@@ -5,22 +5,6 @@
 #include "VariantVisitor.h"
 #include "CustomLiterals.h"
 
-// named aggregate initialization
-struct Foo
-{
-    int integer = 0;
-    float realnumber = 1.0f;
-    std::string hello;
-};
-
-void func()
-{
-    Foo foo{.realnumber=2.0f, .integer=5};
-}
-
-
-
-
 // custom literals
 
 // std::variant and std::visit example
@@ -56,7 +40,7 @@ int main()
 
     {
         using namespace CustomLiterals;
-        exec();
+        run();
     }
 
     return 0;
