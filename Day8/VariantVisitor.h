@@ -5,7 +5,7 @@ namespace Day8
 {
     namespace VariantVisitor
     {
-        void exec();
+        void run();
     }
 }
 

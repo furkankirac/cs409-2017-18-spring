@@ -5,12 +5,9 @@
 #include "VariantVisitor.h"
 #include "CustomLiterals.h"
 
-// custom literals
-
 // std::variant and std::visit example
 
 // std::optional
-// inline namespaces
 // RVO
 // noexcept operator and specifier
 
@@ -35,13 +32,13 @@ int main()
 
     {
         using namespace VariantVisitor;
-        exec();
-    }
-
-    {
-        using namespace CustomLiterals;
         run();
     }
+
+//    {
+//        using namespace CustomLiterals;
+//        run();
+//    }
 
     return 0;
 }
