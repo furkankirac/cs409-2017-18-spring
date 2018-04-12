@@ -1,62 +1,50 @@
 #include <iostream>
 #include <string>
 
-// partial template specialization for classes
-// template specialization for function templates
+// CRTP
 
 // std::map
 // std::any
 
 // static_cast, dynamic_cast, reinterpret_cast, const_cast
-// CRTP
 
 // inline variables
 // [[fallthrough]], [[maybe_unused]], [[nodiscard]]
 
 using namespace std;
 
-template<typename T, int K>
-struct Array
-{
-    T values[K];
-};
+// Curiously recurring template pattern
 
-template<int K>
-struct Array<double, K>
+template<typename DERIVED>
+struct Base
 {
-    double doubles[K];
     std::string text;
+    int times;
+
+    void print()
+    {
+//        DERIVED::PRINT();
+        ((DERIVED*)this)->PRINT();
+    }
 };
 
-template<>
-struct Array<float, 1>
+struct Derived : public Base<Derived>
 {
-    float V;
+    void PRINT()
+    {
+//        cout << "deneme" << endl;
+        for(int i=0; i<times; ++i)
+            cout << text;
+    }
 };
 
-template<typename T, int K = 1>
-inline void println(T value)
-{
-    cout << value;
-    for(int i=0; i<K; ++i)
-        cout << endl;
-}
+
 
 
 int main()
 {
-    Array<int, 10> A;
-    A.values[0] = 10;
-
-    Array<double, 20> D;
-    D.doubles[2] = 2.3;
-    D.text = "hurray";
-
-    Array<float, 1> F;
-    F.V = 3.2f;
-
-    println(F.V);
-    println<std::string, 3>(D.text);
+    Derived D;
+    D.print();
 
     return 0;
 }
