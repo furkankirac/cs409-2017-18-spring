@@ -20,9 +20,11 @@ void printAll(int count, ...)
 {
     va_list args;
     va_start(args, count);
-    for(int i=0; i<count; ++i)
+    while(true)
     {
         auto value = va_arg(args, int);
+        if(value == -1)
+            break;
         cout << value << endl;
     }
     cout << endl;
@@ -32,7 +34,7 @@ void printAll(int count, ...)
 
 int main()
 {
-    printAll(50, 1, 2, 3, 4, 5);
-    printAll(3, 10, 20, 30);
+    printAll(0, 1, 2, 3, 4, 5, -1);
+    printAll(0, 10, 20, 30, -1);
     return 0;
 }
