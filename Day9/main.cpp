@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cstdarg>
 
-// variadic parameters
 // variadic templates: printAll: old style recursion, if constexpr version
 // pack expansion, initializer_lists
 // template type deduction displayer trick
@@ -16,25 +15,23 @@
 
 using namespace std;
 
-void printAll(int count, ...)
+void printAll()
 {
-    va_list args;
-    va_start(args, count);
-    while(true)
-    {
-        auto value = va_arg(args, int);
-        if(value == -1)
-            break;
-        cout << value << endl;
-    }
-    cout << endl;
-    va_end(args);
 }
 
+template<typename HEAD, typename... TAIL>
+void printAll(HEAD head, TAIL... tail)
+{
+    cout << head << endl;
+    printAll(tail...);
+}
 
 int main()
 {
-    printAll(0, 1, 2, 3, 4, 5, -1);
-    printAll(0, 10, 20, 30, -1);
+    printAll(1, 2, 30.0, "deneme", 5);
+
+    cout << endl;
+
+    printAll(10, 20, 30);
     return 0;
 }
