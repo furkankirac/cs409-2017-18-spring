@@ -1,16 +1,6 @@
 #include <iostream>
 #include <string>
 
-// CRTP
-
-// std::map
-// std::any
-
-// static_cast, dynamic_cast, reinterpret_cast, const_cast
-
-// inline variables
-// [[fallthrough]], [[maybe_unused]], [[nodiscard]]
-
 using namespace std;
 
 // Curiously recurring template pattern
