@@ -15,12 +15,10 @@
 
 using namespace std;
 
-template<typename HEAD, typename... TAIL>
-void printAll(const HEAD& head, const TAIL&... tail)
+template<typename... Ts>
+void printAll(const Ts&... args)
 {
-    cout << head << endl;
-    if constexpr(sizeof...(tail) > 0)
-        printAll(tail...);
+    (std::cout << ... << args);
 }
 
 int main()
