@@ -15,23 +15,13 @@
 
 using namespace std;
 
-void printAll()
-{
-}
-
 template<typename HEAD, typename... TAIL>
 void printAll(const HEAD& head, const TAIL&... tail)
 {
     cout << head << endl;
-    printAll(tail...);
+    if constexpr(sizeof...(tail) > 0)
+        printAll(tail...);
 }
-
-//template<typename... TAIL>
-//void printAll(const std::string& s, const TAIL&... tail)
-//{
-//    cout << "'" << s << "'" << endl;
-//    printAll(tail...);
-//}
 
 int main()
 {
