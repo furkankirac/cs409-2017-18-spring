@@ -11,39 +11,18 @@
 
 using namespace std;
 
-template<typename T>
-struct TypeDisplayer;
-
-void print_(const int& value)
+auto func()
 {
-    cout << "lvalue:" << value << endl;
-}
 
-void print_(int&& value)
-{
-    cout << "rvalue:" << value << endl;
-}
-
-template<typename T>
-void print(T&& value)
-{
-//    TypeDisplayer<T> x;
-//    TypeDisplayer<decltype(value)> y;
-
-    print_(std::forward<T>(value));
 }
 
 int main()
 {
-    int i = 5;
-    const int ci = 10;
+    std::array<int, 2> a2;
+    std::array<int, 3> a3;
 
-//    print(5); // T = int, value = int
-//    print(5.0); // T = double, value = double
-//    print(i); // T = int, value = int
-    print(ci);
-    print(5);
-//    print(ci); // T = int, value = int
+    a2 = func(); // func is gonna deduce the return type's 2 and do plan A
+    a3 = func(); // func is gonna deduce the return type's 3 and do plan B
 
     return 0;
 }
