@@ -1,8 +1,6 @@
 #include <iostream>
 #include <cstdarg>
 
-// template type deduction displayer trick
-
 // std::map
 // std::any
 
@@ -43,9 +41,9 @@ int main()
 //    print(5); // T = int, value = int
 //    print(5.0); // T = double, value = double
 //    print(i); // T = int, value = int
-    print(5); // T = int, value = int
+    print(ci);
+    print(5);
 //    print(ci); // T = int, value = int
-
 
     return 0;
 }
