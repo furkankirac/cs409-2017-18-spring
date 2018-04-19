@@ -15,18 +15,25 @@
 
 using namespace std;
 
-template<typename... Ts>
-void printAll(const Ts&... args)
+template <typename T>
+void print(const T& value)
 {
-    (std::cout << ... << args);
+    cout << value << endl;
 }
+
+template<typename... Ts>
+void runOnAll(const Ts&... args)
+{
+    //print(1), print(2), print(30.0), print(5)
+    // (void, 0), (void, 0), (void, 0), (void, 0)
+    auto x = {(print(args),0)...};
+    (void)std::initializer_list<int>{(print(args),0)...};
+}
+
 
 int main()
 {
-    printAll(1, 2, 30.0, std::string("deneme"), 5);
+    runOnAll(1, 2, 30.0, 5);
 
-    cout << endl;
-
-    printAll(10, 20, 30);
     return 0;
 }
