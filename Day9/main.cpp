@@ -20,15 +20,22 @@ void printAll()
 }
 
 template<typename HEAD, typename... TAIL>
-void printAll(HEAD head, TAIL... tail)
+void printAll(const HEAD& head, const TAIL&... tail)
 {
     cout << head << endl;
     printAll(tail...);
 }
 
+//template<typename... TAIL>
+//void printAll(const std::string& s, const TAIL&... tail)
+//{
+//    cout << "'" << s << "'" << endl;
+//    printAll(tail...);
+//}
+
 int main()
 {
-    printAll(1, 2, 30.0, "deneme", 5);
+    printAll(1, 2, 30.0, std::string("deneme"), 5);
 
     cout << endl;
 
