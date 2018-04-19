@@ -1,8 +1,6 @@
 #include <iostream>
 #include <cstdarg>
 
-// variadic templates: printAll: old style recursion, if constexpr version
-// pack expansion, initializer_lists
 // template type deduction displayer trick
 
 // std::map
@@ -15,25 +13,39 @@
 
 using namespace std;
 
-template <typename T>
-void print(const T& value)
+template<typename T>
+struct TypeDisplayer;
+
+void print_(const int& value)
 {
-    cout << value << endl;
+    cout << "lvalue:" << value << endl;
 }
 
-template<typename... Ts>
-void runOnAll(const Ts&... args)
+void print_(int&& value)
 {
-    //print(1), print(2), print(30.0), print(5)
-    // (void, 0), (void, 0), (void, 0), (void, 0)
-    auto x = {(print(args),0)...};
-    (void)std::initializer_list<int>{(print(args),0)...};
+    cout << "rvalue:" << value << endl;
 }
 
+template<typename T>
+void print(T&& value)
+{
+//    TypeDisplayer<T> x;
+//    TypeDisplayer<decltype(value)> y;
+
+    print_(std::forward<T>(value));
+}
 
 int main()
 {
-    runOnAll(1, 2, 30.0, 5);
+    int i = 5;
+    const int ci = 10;
+
+//    print(5); // T = int, value = int
+//    print(5.0); // T = double, value = double
+//    print(i); // T = int, value = int
+    print(5); // T = int, value = int
+//    print(ci); // T = int, value = int
+
 
     return 0;
 }
