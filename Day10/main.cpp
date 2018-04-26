@@ -1,7 +1,5 @@
 #include <iostream>
 
-// SFINAE, enable_if
-
 // template auto parameters
 
 // array types with constant size
@@ -15,20 +13,21 @@
 
 using namespace std;
 
-template<typename U, U u>
+template<auto u>
 struct cint
 {
+    using U = decltype(u);
     using value_type = U;
     static constexpr value_type value = u;
 
-    template<typename V, V v>
-    auto operator +(cint<V, v>)
+    template<auto v>
+    auto operator +(cint<v>)
     {
-        return cint<decltype(u+v), u+v>{};
+        return cint<u+v>{};
     }
 
-    template<typename V, V v>
-    bool operator ==(cint<V, v>)
+    template<auto v>
+    bool operator ==(cint<v>)
     {
         return u == v;
     }
@@ -55,7 +54,6 @@ template <char... CHARS>
 auto operator "" _c()
 {
     return cint<
-            int,
             parse<sizeof...(CHARS)>({ CHARS... })
             >{}
             ;
@@ -63,5 +61,6 @@ auto operator "" _c()
 
 int main()
 {
+    auto A = cint<10>{};
     return (123_c + 1110_c).value;
 }
