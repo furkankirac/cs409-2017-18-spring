@@ -35,22 +35,33 @@ struct cint
 
 };
 
-#define CINT(type, value) cint<type, value>{}
+
+template<int N>
+constexpr int parse(const char (&array)[N])
+{
+    int multiplier = 1;
+    int value = 0;
+    for(auto i = N-1; i>=0; --i)
+    {
+        value += multiplier * (array[i] - '0');
+        multiplier *= 10;
+    }
+
+    return value;
+}
+
+
+template <char... CHARS>
+auto operator "" _c()
+{
+    return cint<
+            int,
+            parse<sizeof...(CHARS)>({ CHARS... })
+            >{}
+            ;
+}
 
 int main()
 {
-    auto S = "furkan"s;
-
-//    A::value ---> 5;
-//    A::value_type ---> int
-
-    auto A = CINT(int, 10);
-    auto B = cint<long int, 10>{};
-    auto C = A + B;
-    bool x = A == B;
-//    cout << (x ? "true" : "false") << endl;
-
-//    decltype(C) --> cint<long int, 15>
-
-    return C.value;
+    return (123_c + 1110_c).value;
 }
