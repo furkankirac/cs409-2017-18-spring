@@ -76,7 +76,7 @@ constexpr auto distance(P1 p1, P2 p2)
     return sqrt(xs*xs + ys*ys); // sqrt needs to be used in an unqualified fashion for ADL to work
 }
 
-// a generic point implementation that can work both with standard run-tiem types and compile-time types
+// a generic point implementation that can work both with standard run-time types and compile-time types
 template<typename T1, typename T2>
 struct Point { T1 x; T2 y; };
 
