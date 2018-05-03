@@ -6,19 +6,10 @@
 
 using namespace std;
 
-// variable templates
-template<class T>
-constexpr T pi = T(3.1415926535897932385L);  // variable template
-
-template<class T>
-T circular_area(T r) // function template
-{
-    return pi<T> * r * r; // pi<T> is a variable template instantiation
-}
-
-
-//template<typename T, typename = enable_if_enum_or_integral<T>>
-//inline bool instanceOf(const T type) const { return codecId() == (LCT)type; }
+template<typename T>
+using enable_if_enum_or_integral = enable_if<is_enum_v<T> || is_integral_v<T>>;
+template<typename T, typename = enable_if_enum_or_integral<T>>
+inline bool instanceOf(const T type) const { return true; }
 
 // cint --> std::integral_constant
 // class template parameter deduction
