@@ -1,13 +1,10 @@
 #include <iostream>
 #include <variant>
 #include <vector>
-//#include <numeric>
-//#include <algorithm>
+#include <numeric>
+#include <algorithm>
 
 using namespace std;
-
-// std::accumulate
-// std::remove, std::remove_if
 
 // std::common_type_t
 // std::gcd, lcm
@@ -23,43 +20,24 @@ using namespace std;
 // inline variables
 // [[fallthrough]], [[maybe_unused]], [[nodiscard]]
 
-namespace std
-{
-    inline namespace __1
-    {
-        template<typename T>
-        pair(T, const char*) -> pair<T, string>;
-    }
-}
-
-template<typename ...Ts> struct Lambdas : public Ts... { using Ts::operator()...; };
-template<class... Ts> Lambdas(Ts...) -> Lambdas<Ts...>;
-
 int main()
 {
     using namespace std;
 
-    auto p = pair(10.0, "furkan");
-//    TD<decltype(p)> inst;
+    vector<float> V{1.1, 2.2, 3.3, 4.9};
 
-    variant<int, float, string> key;
-    key = 5.0f;
+    auto sum = accumulate(next(V.begin()), V.end(), to_string(V[0]),
+            [](const string& s, float value) {
+                return s + ", " + to_string(value);
+                }
+    );
+    cout << sum << endl;
 
-    visit([](auto&& v) {
-        using T = decay_t<decltype(v)>;
-        if constexpr(is_same_v<T, int>)
-            cout << "integer" << endl;
-        else if constexpr(is_same_v<T, float>)
-            cout << "float" << endl;
-        else if constexpr(is_same_v<T, string>)
-            cout << "string" << endl;
-    }, key);
+    sum.erase(remove(sum.begin(), sum.end(), ','), sum.end());
+    cout << sum << endl;
 
-    visit(Lambdas{
-              [](int v) { cout << "integer" << endl; },
-              [](float v) { cout << "float" << endl; },
-              [](string v) { cout << "string" << endl; }
-          }, key);
+
+    // std::remove, std::remove_if
 
 
     return 0;
