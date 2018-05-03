@@ -26,7 +26,7 @@ struct cint
     // below is the casting operator defined for all possible types.
     // this allows to assign a cint<...> to an "int", "long" kind of standard variable easily (without writing .value at the end)
     template<typename T>
-    operator T() { return (T)value; }
+    operator T() { return static_cast<T>(value); }
 
     // below sqrt function does nothing right now
     // you could implement a compile time function that can take square-roots
