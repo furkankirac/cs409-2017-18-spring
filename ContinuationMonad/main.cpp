@@ -29,21 +29,21 @@ auto list = [](auto ...x) {
     return [=](auto access) { return access(x...); };
 };
 
-// head, tail, length, print are examples of operations that you may perform on a list.
+// head, tail, length, println, join are examples of operations that you may perform on a list.
 
-// head returns the first element of the list.
+// head returns the first element of the list as a new list.
 auto head = [](auto x) {
     auto access = [](auto first, auto ...rest) { return list(first); };
     return x(access); // stored parameter pack of the list will be applied to access functor
 };
 
-// tail returns the list excluding the first element.
+// tail returns a new list excluding the first element.
 auto tail = [](auto x) {
     auto access = [](auto first, auto ...rest) { return list(rest...); };
     return x(access); // stored parameter pack of the list will be applied to access functor
 };
 
-// length returns the size of the parameter pack stored.
+// length returns the size of the parameter pack stored which is equal to the number of elements of the list.
 auto length = [](auto x) /* -> size_t */ {
     auto access = [](auto ...z) { return sizeof...(z); };
     return x(access); // stored parameter pack of the list will be applied to access functor
@@ -56,9 +56,10 @@ auto println = [](auto x) /* -> void */ {
     return x(access); // stored parameter pack of the list will be applied to access functor
 };
 
-// join creates a string by joining the stringified elements of the parameter pack by inserting a joiner in between
+// join creates a string by joining the stringified elements of the parameter pack by inserting a joiner in-between
 auto join = [](auto x, const string& joiner = "; ") /* -> string */ {
     auto access = [joiner](auto ...z) {
+        // vector and accumulate support only run-time works. therefore this lambda doesn't work in compile-time jobs
         vector<string> v = {make_string(z)...};
         return accumulate(next(v.begin()), v.end(), v[0], [joiner](const string& accum, const string& s) { return accum + joiner + s; });
     };
@@ -68,7 +69,7 @@ auto join = [](auto x, const string& joiner = "; ") /* -> string */ {
 
 int main()
 {
-    auto L = list(1, '2', "3", "4"s);
+    auto L = list(1, '2', "3", "4"s); // a heterogenous array that stores <int, char, const char*, string> in this example
 
     cout << "Length of list is " << length(L) << endl << endl;
 
