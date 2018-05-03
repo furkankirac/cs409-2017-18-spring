@@ -1,6 +1,6 @@
 #include <iostream>
 #include <variant>
-//#include <vector>
+#include <vector>
 //#include <numeric>
 //#include <algorithm>
 
@@ -23,15 +23,6 @@ using namespace std;
 // inline variables
 // [[fallthrough]], [[maybe_unused]], [[nodiscard]]
 
-
-// class template parameter deduction
-// deduction guides
-// overloaded lambdas
-
-
-template<typename T>
-struct TD;
-
 namespace std
 {
     inline namespace __1
@@ -41,7 +32,8 @@ namespace std
     }
 }
 
-
+template<typename ...Ts> struct Lambdas : public Ts... { using Ts::operator()...; };
+template<class... Ts> Lambdas(Ts...) -> Lambdas<Ts...>;
 
 int main()
 {
@@ -51,12 +43,9 @@ int main()
 //    TD<decltype(p)> inst;
 
     variant<int, float, string> key;
-    variant<int, double> value;
-
     key = 5.0f;
-    value = 10.0;
 
-    visit([](auto&& v, auto&& v2) {
+    visit([](auto&& v) {
         using T = decay_t<decltype(v)>;
         if constexpr(is_same_v<T, int>)
             cout << "integer" << endl;
@@ -64,7 +53,13 @@ int main()
             cout << "float" << endl;
         else if constexpr(is_same_v<T, string>)
             cout << "string" << endl;
-    }, key, value);
+    }, key);
+
+    visit(Lambdas{
+              [](int v) { cout << "integer" << endl; },
+              [](float v) { cout << "float" << endl; },
+              [](string v) { cout << "string" << endl; }
+          }, key);
 
 
     return 0;
