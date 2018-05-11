@@ -1,32 +1,32 @@
 #include <iostream>
-#include <string>
-#include <numeric>
-#include <vector>
+#include <tuple>
 
 #include "Enum.h"
-#include "Monad.h"
-#include "cint.h"
 
-enum class ColorTypeDef { Red, Green, Blue };
+template<auto u>
+using cint = typename std::integral_constant<decltype(u), u>;
 
-template<typename INFOFUNC>
+enum class ColorTypeDef { Red, Green, Blue, Orange };
+
+template<typename TUPLE>
 struct ColorType
 {
-    const INFOFUNC info;
+    const TUPLE info;
 
     ColorTypeDef value;
 
-    ColorType(INFOFUNC info) : info(info) { }
+    ColorType(const TUPLE info) : info(info) { }
 
-    template<typename ENUMTYPE, typename ENUMINFOLIST>
-    constexpr inline EnumInfo infoOf(ENUMINFOLIST L)
+    template<typename ENUMTYPE, size_t i = 0>
+    constexpr inline EnumInfo infoOf(TUPLE t)
     {
-        if(length(L) == 0)
-            return {};
-        if constexpr(!std::is_same_v<ENUMTYPE, decltype(head_element(L))>)
-            return infoOf<ENUMTYPE>(tail(L));
+        const auto sz = std::tuple_size_v<TUPLE>;
+        if constexpr(std::is_same_v<ENUMTYPE, std::tuple_element_t<i, TUPLE>>)
+            return { std::get<i+1>(t), std::get<i+2>(t) };
+        else if constexpr(i < sz-1)
+            return infoOf<ENUMTYPE, i+1>(t);
         else
-            return { head_element(tail(L)), head_element(tail(tail(L))) };
+            return {"", ""};
     }
 
     template<typename ENUMTYPE>
@@ -37,7 +37,7 @@ int main()
 {
     using namespace std;
 
-    ColorType ct{list(
+    ColorType ct{make_tuple(
                     cint<ColorTypeDef::Red>{}, "Red", "R",
                     cint<ColorTypeDef::Green>{}, "Green", "G",
                     cint<ColorTypeDef::Blue>{}, "Blue", "B"
@@ -45,4 +45,5 @@ int main()
     cout << ct.infoOf<cint<ColorTypeDef::Green>>().fullname << endl;
 //    cout << ct.infoBlock<cint<ColorTypeDef::Green>>().shortname << endl;
     return string(ct.infoOf<cint<ColorTypeDef::Green>>().shortname).size();
+//    return 0;
 }
