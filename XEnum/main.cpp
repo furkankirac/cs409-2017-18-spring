@@ -38,21 +38,18 @@ namespace compile_time
 
 using namespace compile_time;
 
-template<typename ENUMTYPE, typename... Ts>
-struct EnumType
+
+template<typename ENUMSTRUCT, typename... Ts>
+struct EnumType : public ENUMSTRUCT
 {
-    using type = ENUMTYPE;
+    using ENUMTYPE = typename ENUMSTRUCT::Type;
     using TUPLE = std::tuple<Ts...>;
 
     ENUMTYPE value{ENUMTYPE::DEFAULT};
 
     constexpr EnumType(const ENUMTYPE value = ENUMTYPE::DEFAULT) : value(value) { }
 
-    constexpr EnumType(const Ts...)
-    {
-    }
-
-    constexpr EnumType(ENUMTYPE value, const Ts...) : value{value}
+    constexpr EnumType(ENUMSTRUCT, const Ts...)
     {
     }
 
@@ -76,9 +73,10 @@ EnumType(FIRST, const REST...) -> EnumType<typename FIRST::value_type, FIRST, RE
 #define ENUMINFO(x, y, z) CINT(x), CSTR(y), CSTR(z)
 
 // ---[ ColorType
-enum class ColorTypeDef { Red, Green, Blue, Orange, DEFAULT = Blue };
+struct ColorTypeDef { enum Type { Red, Green, Blue, Orange, DEFAULT = Blue }; };
 
 constexpr EnumType color_type{
+    ColorTypeDef{},
     ENUMINFO(ColorTypeDef::Red, "Red", "R"),
     ENUMINFO(ColorTypeDef::Green, "Green", "G"),
     ENUMINFO(ColorTypeDef::Blue, "Blue", "B")
@@ -86,9 +84,10 @@ constexpr EnumType color_type{
 using ColorType = decltype(color_type);
 
 // ---[ Transformation
-enum class TransformationTypeDef { None, Rotate_90, Rotate_180, Rotate_270, Flip_Horizontal, Flip_Vertical, DEFAULT = None };
+struct TransformationTypeDef { enum Type { None, Rotate_90, Rotate_180, Rotate_270, Flip_Horizontal, Flip_Vertical, DEFAULT = None }; };
 
 constexpr EnumType transformation_type{
+    TransformationTypeDef{},
     ENUMINFO(TransformationTypeDef::None, "None", "None"),
     ENUMINFO(TransformationTypeDef::Rotate_90, "Rotate 90 Degrees", "Rot90"),
     ENUMINFO(TransformationTypeDef::Rotate_180, "Rotate 180 Degrees", "Rot180"),
@@ -102,11 +101,11 @@ int main()
 {
     using namespace std;
 
-    ColorType ct{ColorTypeDef::Green};
+    ColorType ct = ColorType::Green;
     TransformationType tt{TransformationTypeDef::Rotate_270};
 
-    cout << ct.infoOf<ColorTypeDef::Green>().fullname << endl;
-//    cout << ct.infoOf<cint<ColorTypeDef::Green>>().shortname << endl;
-    return string(ct.infoOf<ColorTypeDef::Green>().shortname).size();
+    cout << ct.infoOf<ColorType::Green>().fullname << endl;
+    cout << ct.infoOf<ColorType::Green>().shortname << endl;
+    return string(ct.infoOf<ColorType::Green>().fullname).size();
 //    return 0;
 }
