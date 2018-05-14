@@ -100,7 +100,11 @@ constexpr EnumType transformation_type{
     ENUMINFO(TransformationType::Flip_Horizontal, "Flip Horizontal", "H.Flip"),
     ENUMINFO(TransformationType::Flip_Vertical, "Flip Vertical", "V.Flip")
 };
-using TransformationType = decltype(transformation_type);
+//using TransformationType = decltype(transformation_type);
+struct TransformationType : public decltype(transformation_type)
+{
+    void clear() { value = TransformationType::DEFAULT; }
+};
 
 int main()
 {
@@ -108,6 +112,7 @@ int main()
 
     ColorType ct = ColorType::Green;
     TransformationType tt{TransformationType::Rotate_270};
+    tt.clear();
 
     cout << ct.infoOf<ColorType::Green>().fullname << endl;
     cout << ct.infoOf<ColorType::Green>().shortname << endl;
