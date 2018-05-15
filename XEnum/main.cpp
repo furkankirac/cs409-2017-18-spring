@@ -1,13 +1,16 @@
 #include <iostream>
 #include <tuple>
 
+#define STRINGS_WITH_UDL // enable experimental user defined literals which is not part of the standard but Clang and GCC supports it
+
 namespace compile_time
 {
     // compile-time integral values
     template<auto u>
     using cint = typename std::integral_constant<decltype(u), u>;
 
-    #define CINT(x) cint<x>{}
+    template<auto u>
+    constexpr cint<u> cintvar{}; // cintvar is a templatized variable.
 
     // compile-time strings
     template<char ...s>
@@ -16,19 +19,35 @@ namespace compile_time
     template<char ...s>
     struct cstring { static constexpr const char* c_str() { return &string_storage<s...>[0]; } };
 
+#ifdef STRINGS_WITH_UDL
+    template <char ...s>
+    constexpr cstring<s...> cstring_var{}; // variable template (templatized variable)
+
+    inline namespace literals
+    {
+        // this is experimental usage not in the standard yet. because string literals cannot be templatized as we wish yet
+        // but fortunately both GCC and Clang supports it
+        template <typename CHARTYPE, CHARTYPE ...s>
+        constexpr auto operator"" _s()
+        {
+            static_assert(std::is_same<CHARTYPE, char>::value, "we support only char for character types.");
+            return cstring_var<s...>;
+        }
+    } // namespace literals
+#else
     template <typename S, std::size_t ...N>
     constexpr cstring<S::get()[N]...> prepare_impl(S, std::index_sequence<N...>) { return {}; }
 
     template <typename S>
     constexpr decltype(auto) prepare(S s) { return prepare_impl(s, std::make_index_sequence<sizeof(S::get()) - 1>{}); }
 
-    #define CSTR(s) \
-        compile_time::prepare([]{ \
-            struct tmp { static constexpr decltype(auto) get() { return s; } }; \
-            return tmp{}; \
-            }() )
-
-} // end of compile-time namespace
+#define CSTR(s) \
+    compile_time::prepare([]{ \
+        struct tmp { static constexpr decltype(auto) get() { return s; } }; \
+        return tmp{}; \
+        }() )
+#endif
+} // namespace compile_time
 
 using namespace compile_time;
 
@@ -38,7 +57,7 @@ struct EnumInfo
     const char* shortname{};
 };
 
-template<typename ENUMSTRUCT, typename... Ts>
+template<typename ENUMSTRUCT, typename ...Ts>
 struct EnumType : public ENUMSTRUCT
 {
     using ENUMTYPE = typename ENUMSTRUCT::Type;
@@ -65,23 +84,19 @@ struct EnumType : public ENUMSTRUCT
     }
 };
 
-//template<typename FIRST, typename ...REST>
-//EnumType(FIRST, const REST...) -> EnumType<typename FIRST::value_type, FIRST, REST...>;
-
 // ENUMTYPE definitions
-#define ENUMINFO(x, y, z) CINT(impl::x), CSTR(y), CSTR(z)
 
 // ---[ ColorType
 namespace impl
 {
     struct ColorType { enum Type { Red, Green, Blue, Orange, DEFAULT = Blue }; };
-}
+} // namespace impl
 
 constexpr EnumType color_type{
     impl::ColorType{},
-    ENUMINFO(ColorType::Red, "Red", "R"),
-    ENUMINFO(ColorType::Green, "Green", "G"),
-    ENUMINFO(ColorType::Blue, "Blue", "B")
+    cintvar<impl::ColorType::Red>, "Red"_s, "R"_s,
+    cintvar<impl::ColorType::Green>, "Green"_s, "G"_s,
+    cintvar<impl::ColorType::Blue>, "Blue"_s, "B"_s
 };
 using ColorType = decltype(color_type);
 
@@ -89,16 +104,16 @@ using ColorType = decltype(color_type);
 namespace impl
 {
     struct TransformationType { enum Type { None, Rotate_90, Rotate_180, Rotate_270, Flip_Horizontal, Flip_Vertical, DEFAULT = None }; };
-}
+} // namespace impl
 
 constexpr EnumType transformation_type{
     impl::TransformationType{},
-    ENUMINFO(TransformationType::None, "None", "None"),
-    ENUMINFO(TransformationType::Rotate_90, "Rotate 90 Degrees", "Rot90"),
-    ENUMINFO(TransformationType::Rotate_180, "Rotate 180 Degrees", "Rot180"),
-    ENUMINFO(TransformationType::Rotate_270, "Rotate 270 Degrees", "Rot270"),
-    ENUMINFO(TransformationType::Flip_Horizontal, "Flip Horizontal", "H.Flip"),
-    ENUMINFO(TransformationType::Flip_Vertical, "Flip Vertical", "V.Flip")
+    cintvar<impl::TransformationType::None>, "None"_s, "None"_s,
+    cintvar<impl::TransformationType::Rotate_90>, "Rotate 90 Degrees"_s, "Rot90"_s,
+    cintvar<impl::TransformationType::Rotate_180>, "Rotate 180 Degrees"_s, "Rot180"_s,
+    cintvar<impl::TransformationType::Rotate_270>, "Rotate 270 Degrees"_s, "Rot270"_s,
+    cintvar<impl::TransformationType::Flip_Horizontal>, "Flip Horizontal"_s, "H.Flip"_s,
+    cintvar<impl::TransformationType::Flip_Vertical>, "Flip Vertical"_s, "V.Flip"_s
 };
 //using TransformationType = decltype(transformation_type);
 struct TransformationType : public decltype(transformation_type)
