@@ -1,7 +1,7 @@
+#include <array>
 #include <iostream>
+#include <string>
 #include <tuple>
-
-#define STRINGS_WITH_UDL // enable experimental user defined literals which is not part of the standard but Clang and GCC supports it
 
 namespace compile_time
 {
@@ -14,12 +14,11 @@ namespace compile_time
 
     // compile-time strings
     template<char ...s>
-    constexpr char const string_storage[sizeof...(s) + 1] = {s..., '\0'};
+    constexpr const char string_storage[sizeof...(s) + 1] = {s..., '\0'};
 
     template<char ...s>
     struct cstring { static constexpr const char* c_str() { return &string_storage<s...>[0]; } };
 
-#ifdef STRINGS_WITH_UDL
     template <char ...s>
     constexpr cstring<s...> cstring_var{}; // variable template (templatized variable)
 
@@ -34,28 +33,9 @@ namespace compile_time
             return cstring_var<s...>;
         }
     } // namespace literals
-#else
-    template <typename S, std::size_t ...N>
-    constexpr cstring<S::get()[N]...> prepare_impl(S, std::index_sequence<N...>) { return {}; }
-
-    template <typename S>
-    constexpr decltype(auto) prepare(S s) { return prepare_impl(s, std::make_index_sequence<sizeof(S::get()) - 1>{}); }
-
-#define CSTR(s) \
-    compile_time::prepare([]{ \
-        struct tmp { static constexpr decltype(auto) get() { return s; } }; \
-        return tmp{}; \
-        }() )
-#endif
 } // namespace compile_time
 
 using namespace compile_time;
-
-struct EnumInfo
-{
-    const char* fullname{};
-    const char* shortname{};
-};
 
 template<typename ENUMSTRUCT, typename ...Ts>
 struct EnumType : public ENUMSTRUCT
@@ -66,23 +46,29 @@ struct EnumType : public ENUMSTRUCT
     ENUMTYPE value{ENUMTYPE::DEFAULT};
 
     constexpr EnumType(const ENUMTYPE value = ENUMTYPE::DEFAULT) : value(value) { }
-
-    constexpr EnumType(ENUMSTRUCT, const Ts...)
-    {
-    }
+    constexpr EnumType(ENUMSTRUCT, const Ts...) { }
 
     template<ENUMTYPE ENUMVAL, size_t i = 0>
-    static constexpr auto infoOf() -> EnumInfo
+    static constexpr size_t indexOf()
     {
         const auto sz = std::tuple_size_v<TUPLE>;
+        static_assert(i < sz, "indexOf cannot find what you are looking for!");
+
         if constexpr(std::is_same_v<cint<ENUMVAL>, std::tuple_element_t<i, TUPLE>>)
-            return { std::tuple_element_t<i+1, TUPLE>::c_str(), std::tuple_element_t<i+2, TUPLE>::c_str() };
-        else if constexpr(i < sz-1)
-            return infoOf<ENUMVAL, i+1>();
+            return i;
         else
-            return {"", ""};
+            return indexOf<ENUMVAL, i+1>();
     }
+
+    template<ENUMTYPE ENUMVAL>
+    static constexpr auto fullNameOf() { return std::tuple_element_t<indexOf<ENUMVAL>()+1, TUPLE>::c_str(); }
+
+    template<ENUMTYPE ENUMVAL>
+    static constexpr auto shortNameOf() { return std::tuple_element_t<indexOf<ENUMVAL>()+2, TUPLE>::c_str(); }
 };
+
+#define fullNameOf(type, val)   type::fullNameOf<type::val>()
+#define shortNameOf(type, val)  type::shortNameOf<type::val>()
 
 // ENUMTYPE definitions
 
@@ -92,12 +78,16 @@ namespace impl
     struct ColorType { enum Type { Red, Green, Blue, Orange, DEFAULT = Blue }; };
 } // namespace impl
 
+#define V(x) cintvar<T::x>
+
+#define T impl::ColorType
 constexpr EnumType color_type{
-    impl::ColorType{},
-    cintvar<impl::ColorType::Red>, "Red"_s, "R"_s,
-    cintvar<impl::ColorType::Green>, "Green"_s, "G"_s,
-    cintvar<impl::ColorType::Blue>, "Blue"_s, "B"_s
+    T{},
+    V(Red), "Red"_s, "R"_s,
+    V(Green), "Green"_s, "G"_s,
+    V(Blue), "Blue"_s, "B"_s
 };
+#undef T
 using ColorType = decltype(color_type);
 
 // ---[ Transformation
@@ -106,15 +96,17 @@ namespace impl
     struct TransformationType { enum Type { None, Rotate_90, Rotate_180, Rotate_270, Flip_Horizontal, Flip_Vertical, DEFAULT = None }; };
 } // namespace impl
 
+#define T impl::TransformationType
 constexpr EnumType transformation_type{
-    impl::TransformationType{},
-    cintvar<impl::TransformationType::None>, "None"_s, "None"_s,
-    cintvar<impl::TransformationType::Rotate_90>, "Rotate 90 Degrees"_s, "Rot90"_s,
-    cintvar<impl::TransformationType::Rotate_180>, "Rotate 180 Degrees"_s, "Rot180"_s,
-    cintvar<impl::TransformationType::Rotate_270>, "Rotate 270 Degrees"_s, "Rot270"_s,
-    cintvar<impl::TransformationType::Flip_Horizontal>, "Flip Horizontal"_s, "H.Flip"_s,
-    cintvar<impl::TransformationType::Flip_Vertical>, "Flip Vertical"_s, "V.Flip"_s
+    T{},
+    V(None), "None"_s, "None"_s,
+    V(Rotate_90), "Rotate 90 Degrees"_s, "Rot90"_s,
+    V(Rotate_180), "Rotate 180 Degrees"_s, "Rot180"_s,
+    V(Rotate_270), "Rotate 270 Degrees"_s, "Rot270"_s,
+    V(Flip_Horizontal), "Flip Horizontal"_s, "H.Flip"_s,
+    V(Flip_Vertical), "Flip Vertical"_s, "V.Flip"_s
 };
+#undef T
 //using TransformationType = decltype(transformation_type);
 struct TransformationType : public decltype(transformation_type)
 {
@@ -129,8 +121,8 @@ int main()
     TransformationType tt{TransformationType::Rotate_270};
     tt.clear();
 
-    cout << ct.infoOf<ColorType::Green>().fullname << endl;
-    cout << ct.infoOf<ColorType::Green>().shortname << endl;
-    return string(ct.infoOf<ColorType::Green>().fullname).size();
-//    return 0;
+    cout << fullNameOf(ColorType, Green);
+    cout << shortNameOf(ColorType, Blue);
+
+    return (int)string(TransformationType::fullNameOf<TransformationType::Rotate_180>()).size();
 }
